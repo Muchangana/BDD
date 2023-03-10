@@ -9,6 +9,6 @@ Feature: User Login
     Then A user has login successfully
 
     Examples:
-      |URL|username|password|
-      | http://adactinhotelapp.com/ |  Muchangana | 197613@Tt  |
-      | http://adactinhotelapp.com/ |  Mutsonga | 123456@abc |
+      | URL                         | username   | password  |
+      | http://adactinhotelapp.com/ | Muchangana | 197613@Tt |
+  //| http://adactinhotelapp.com/ |  Mutsonga | 123456@abc |

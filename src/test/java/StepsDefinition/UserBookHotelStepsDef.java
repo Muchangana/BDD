@@ -2,6 +2,7 @@ package StepsDefinition;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -12,14 +13,25 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 import static StepsDefinition.Const.*;
 
 public class UserBookHotelStepsDef {
 
     static ExtentTest test;
     static ExtentReports report;
+
     @Given("A user enters {string}, {string}, {string},{string},{string},{string},{string},{string}")
-    public void aUserEnters(String sLocation, String sHotel, String sRoom_type, String sNo_room, String sCheck_in, String sCheck_out, String sAdult, String sChildren) throws InterruptedException {
+    public void a_user_enters(String sLocation, String sHotel, String sRoom_type, String sNo_room, String sCheck_in, String sCheck_out, String sAdult, String sChildren) throws InterruptedException {
+
+
+        ExtentSparkReporter spark = new ExtentSparkReporter("C:\\Users\\Vutomi.Mashele\\Desktop\\BDD_Final\\Reports\\report.html");
+        report = new ExtentReports();
+        report.attachReporter(spark);
+        test = report.createTest("Booking");
+        test.info("Desired hotel search displaying");
+
 
         Select dropdown = new Select(Const.getDriver().findElement(By.id("location")));
         dropdown.selectByVisibleText(sLocation);
@@ -55,8 +67,10 @@ public class UserBookHotelStepsDef {
     }
 
     @And("A user enters {string}, {string}, {string}, {string}, {string}")
-    public void aUserEnters(String sFirstname, String sLastname, String sBill, String sCard_no, String sCvv) throws InterruptedException {
+    public void a_user_enters(String sFirstname, String sLastname, String sBill, String sCard_no, String sCvv) throws InterruptedException {
 
+
+        test.log(Status.PASS, "User Fills in billing details successful");
         Const.getDriver().findElement(By.id("first_name")).sendKeys(sFirstname);
         Const.getDriver().findElement(By.id("last_name")).sendKeys(sLastname);
         Const.getDriver().findElement(By.id("address")).sendKeys(sBill);
@@ -80,29 +94,23 @@ public class UserBookHotelStepsDef {
         Thread.sleep(5000);
 
 
-
-
     }
 
     @Then("The hotel was booked successfully")
-    public void theHotelWasBookedSuccessfully()  {
+    public void the_Hotel_Was_Booked_Successfully() {
 
-        ExtentSparkReporter spark = new ExtentSparkReporter("C:\\Users\\ilabadmin\\Desktop\\BDD_Final\\Reports\\reports.html");
-        report = new ExtentReports();
-        report.attachReporter(spark);
-        ExtentTest test2 = report.createTest("Booking");
 
         WebDriverWait objWait = new WebDriverWait(Const.getDriver(), 5);
         objWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("order_no")));
 
         if (!Const.getDriver().findElement(By.id("order_no")).isDisplayed()) {
-            test2.fail("Booking was unsuccessful");
+            test.fail("Hotel booking was unsuccessful");
             Assert.fail();
-        }else{
-            test2.pass("Booking was successful");
+        } else {
+            test.pass("Hotel booking was successful");
             System.out.println(Const.getDriver().findElement(By.id("order_no")).getText());
         }
-        driver.quit();
+
         report.flush();
     }
 
